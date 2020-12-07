@@ -1,4 +1,5 @@
 from .Basis import Basis
+from numpy import sqrt
 
 
 class Atom(Basis):
@@ -7,13 +8,20 @@ class Atom(Basis):
     density matrix coefficient of concerning atoms etc. Not certain where it fits
      right now so keeping it as thin as possible"""
     def __init__(self, symbol, basis_file_name=None):
-        self.symbol = symbol
-        if basis_file_name:
-            self.basis_file = basis_file_name
+        if symbol is None:
+            pass
         else:
-            self.basis_file = symbol+".basis"
-        super().__init__(self.basis_file)
+            self.symbol = symbol
+            if basis_file_name:
+                self.basis_file = basis_file_name
+            else:
+                self.basis_file = symbol+".basis"
+            super().__init__(self.basis_file)
 
-        self.x = 0
-        self.y = 0
-        self.z = 0
+    def set_coord(self, x: float, y: float, z: float):
+        for i in range(self.num_gaussian):
+            for j in range(self.contractions[i]):
+                self.gaussians[i][j].xp = x
+                self.gaussians[i][j].yp = y
+                self.gaussians[i][j].yp = z
+                self.gaussians[i][j].rp = sqrt(x*x + y*y + z*z)

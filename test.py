@@ -1,8 +1,7 @@
-from pyHF import Atom
-from pyHF import Basis
+import pyHF as ph
+import numpy as np
 
-atom = Atom("C",filename="./basis/C.basis")
-print(atom.gaussians)
+mol = ph.Molecule('xyz/h2.xyz',basis_file_list=['basis/H.basis'])
 
-basis = Basis("./basis/C.basis")
-print(basis.gaussians)
+S = ph.overlap(mol.atoms[0], mol.atoms[1])
+print(S)
