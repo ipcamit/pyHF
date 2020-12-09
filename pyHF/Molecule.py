@@ -19,6 +19,10 @@ class Molecule:
         self.atoms: AtomList = []
         self.xyz_parser()
 
+    def __iter__(self):
+        for atom in self.atoms:
+            yield atom
+
     def xyz_parser(self):
         """
         parses xyz file and lists all atom objects with basis file

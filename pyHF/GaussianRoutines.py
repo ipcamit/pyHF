@@ -1,5 +1,5 @@
 import numpy as np
-from .Atom import Atom
+from .Molecule import Molecule
 from .Basis import GTO
 """
 This file simply contains all the functions needed for manipulation of gaussian
@@ -26,9 +26,11 @@ def gauss_product(gauss1 :GTO, gauss2 :GTO) -> GTO:
     yp = (gauss2.alpha * gauss2.yp + gauss1.alpha * gauss1.yp)/p
     zp = (gauss2.alpha * gauss2.zp + gauss1.alpha * gauss1.zp)/p
     Rp = (gauss2.alpha * gauss2.rp + gauss1.alpha * gauss1.rp)/p
-    d = gauss2.d*gauss1.d
-    gauss_final = GTO(alpha=p,d=d*K)
+    d = gauss2.d * gauss1.d
+    gauss_final = GTO(alpha=p, d=d*K)
     gauss_final.set_coord(xp, yp, zp, r=Rp)
+    gauss_final.nc = gauss1.nc * gauss2.nc
+    print(gauss_final.nc,gauss_final.alpha, gauss_final.d, gauss_final.rp)
     return gauss_final
 
 
@@ -37,17 +39,23 @@ def gauss_int(gauss1: GTO) -> float:
     return gauss1.d*np.sqrt(gauss1.alpha/np.pi)**3
 
 
-def overlap(atom1: Atom, atom2: Atom) -> np.ndarray:
-    n1 = 0
-    n2 = 0
-    g1 = 0
-    g2 = 0
-    N = atom1.num_gaussian + atom2.num_gaussian
-    S = np.zeros((N, N))
-    atom_list = [atom1, atom2]
-    for n1 in range(N):
-        for n2 in range(N):
-            for g1 in range(atom_list[n1].contractions[n1]):
-                for g2 in range(atom_list[2].contractions[n2]):
-                    S[n1, n2] += gauss_int(gauss_product(atom[].gaussians[n1][g1],atom[].gaussians[n2][g2]))
+def overlap(mol: Molecule) -> np.ndarray:
+    """
+    returns the overlap matrix
+    :param mol:
+    :return S:
+    """
+    n = 0
+    for atom in mol:
+        n += atom.num_gaussian
+    S = np.zeros((n, n))
+    for n1, atom1 in enumerate(mol):
+        for n2, atom2 in enumerate(mol):
+            for i, gauss1 in enumerate(atom1.gaussians):
+                for j, gauss2 in enumerate(atom2.gaussians):
+                    for prim1 in gauss1:
+                        for prim2 in gauss2:
+                            S[atom1.num_gaussian * n1 + i, atom2.num_gaussian * n2 + j]\
+                                += gauss_int(gauss_product(prim1, prim2))
+                            # print(gauss_int(gauss_product(prim1, prim2)))
     return S
