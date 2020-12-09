@@ -30,13 +30,12 @@ def gauss_product(gauss1 :GTO, gauss2 :GTO) -> GTO:
     gauss_final = GTO(alpha=p, d=d*K)
     gauss_final.set_coord(xp, yp, zp, r=Rp)
     gauss_final.nc = gauss1.nc * gauss2.nc
-    print(gauss_final.nc,gauss_final.alpha, gauss_final.d, gauss_final.rp)
     return gauss_final
 
 
 def gauss_int(gauss1: GTO) -> float:
     """Takes in GTO type object and return its integral -infty to +infty"""
-    return gauss1.d*np.sqrt(gauss1.alpha/np.pi)**3
+    return gauss1.nc * gauss1.d * np.sqrt(np.pi/gauss1.alpha)**3
 
 
 def overlap(mol: Molecule) -> np.ndarray:
@@ -57,5 +56,4 @@ def overlap(mol: Molecule) -> np.ndarray:
                         for prim2 in gauss2:
                             S[atom1.num_gaussian * n1 + i, atom2.num_gaussian * n2 + j]\
                                 += gauss_int(gauss_product(prim1, prim2))
-                            # print(gauss_int(gauss_product(prim1, prim2)))
     return S
