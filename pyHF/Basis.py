@@ -41,7 +41,7 @@ class Basis:
         self.basis_file = basis_file
         self.num_gaussian = 0
         self.contractions = []
-        self.z = 0
+        self.Z = 0
         self.gaussians: GaussListList = []
         self.read_basis()
 
@@ -49,9 +49,9 @@ class Basis:
         with open(self.basis_file) as fp:
             json_obj = json.load(fp)
 
-        self.z = int(list(json_obj["elements"].keys())[0])
+        self.Z = int(list(json_obj["elements"].keys())[0])
 
-        for shell in json_obj["elements"][str(self.z)]["electron_shells"]:
+        for shell in json_obj["elements"][str(self.Z)]["electron_shells"]:
 
             self.num_gaussian += 1
             self.contractions.append(len(shell['exponents']))

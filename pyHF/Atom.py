@@ -8,6 +8,9 @@ class Atom(Basis):
     density matrix coefficient of concerning atoms etc. Not certain where it fits
      right now so keeping it as thin as possible"""
     def __init__(self, symbol, basis_file_name=None):
+        self.xc = 0
+        self.yc = 0
+        self.zc = 0
         if symbol is None:
             pass
         else:
@@ -23,5 +26,8 @@ class Atom(Basis):
             for j in range(self.contractions[i]):
                 self.gaussians[i][j].xp = x
                 self.gaussians[i][j].yp = y
-                self.gaussians[i][j].yp = z
+                self.gaussians[i][j].zp = z
+                self.xc = x
+                self.yc = y
+                self.zc = z
                 self.gaussians[i][j].rp = sqrt(x*x + y*y + z*z)
