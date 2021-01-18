@@ -42,6 +42,6 @@ class TwoElectronIntegrals:
                                                     for prim4 in gauss4:
                                                         Gabcd[atom1.num_gaussian * n1 + i, atom2.num_gaussian * n2 + j,
                                                               atom3.num_gaussian * n3 + k, atom4.num_gaussian * n4 + l]\
-                                                                = exchange_2e_integral(prim1, prim2, prim3, prim4)
+                                                                += exchange_2e_integral(prim1, prim2, prim3, prim4)
         return Gabcd
 
