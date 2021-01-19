@@ -24,7 +24,9 @@ def gauss_product(gauss1: GTO, gauss2: GTO) -> GTO:
     """
     p = (gauss2.alpha + gauss1.alpha)
     q = gauss2.alpha * gauss1.alpha
-    K = np.exp(-(q / p) * (gauss1.rp - gauss2.rp) ** 2)
+    K = np.exp(-(q / p) * ((gauss1.xp - gauss2.xp) ** 2 +
+                           (gauss1.yp - gauss2.yp) ** 2 +
+                           (gauss1.zp - gauss2.zp) ** 2))
     xp = (gauss2.alpha * gauss2.xp + gauss1.alpha * gauss1.xp) / p
     yp = (gauss2.alpha * gauss2.yp + gauss1.alpha * gauss1.yp) / p
     zp = (gauss2.alpha * gauss2.zp + gauss1.alpha * gauss1.zp) / p
@@ -106,7 +108,8 @@ def Fo(n: int, t: float) -> float:
     if t == 0:
         output = 1 / (2 * n + 1)
     else:
-        output = gamma(n + 0.5) * gammainc(t, n + 0.5) / (2 * t ** (n + 0.5))
+        output = gamma(n + 0.5) * gammainc(n + 0.5, t) / (2 * t ** (n + 0.5))
+    #     gammainc in matlab takes the arguments other way round ie gammainc(t,n+0.5)
     return output
 
 
@@ -145,8 +148,9 @@ def exchange_2e_integral(gauss1: GTO, gauss2: GTO, gauss3: GTO, gauss4: GTO) -> 
     gauss12 = gauss_product(gauss1, gauss2)
     gauss34 = gauss_product(gauss3, gauss4)
     delR1234 = (gauss12.xp - gauss34.xp) ** 2 \
-               + (gauss12.yp - gauss34.yp) ** 2 \
-               + (gauss12.zp - gauss34.zp) ** 2
+             + (gauss12.yp - gauss34.yp) ** 2 \
+             + (gauss12.zp - gauss34.zp) ** 2
+    gauss1234 = gauss_product(gauss12,gauss34)
     integral = 2 * np.pi ** (5 / 2) / (gauss_sum_12 * gauss_sum_34 * (gauss_sum_12 + gauss_sum_34) ** 0.5) \
                * np.exp(-gauss_prod_12 / gauss_sum_12 * delR12 - gauss_prod_34 / gauss_sum_34 * delR34) \
                * Fo(0, gauss_sum_12 * gauss_sum_34 / (gauss_sum_12 + gauss_sum_34) * delR1234) \
