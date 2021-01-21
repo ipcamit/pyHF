@@ -78,3 +78,7 @@ class OneElectronIntegrals:
                                     # print(Vc)
             # exit()
         return Vc
+
+    #
+    # @staticmethod
+    # def H0():

@@ -15,6 +15,7 @@ class Molecule:
         self.xyz_file = xyz_file
         self.num_atoms = None
         self.xyz_info = None
+        self.Ne = 0
         self.basis_file_list = basis_file_list
         self.atoms: AtomList = []
         self.xyz_parser()
@@ -43,6 +44,7 @@ class Molecule:
                     atom_obj = Atom(atom_sym)
                 atom_obj.set_coord(float(x), float(y), float(z))
                 self.atoms.append(atom_obj)
+                self.Ne += atom_obj.Z
 
     # def set_coords(self, x: float,y: float,z: float):
     #     for atom in self.atoms:
